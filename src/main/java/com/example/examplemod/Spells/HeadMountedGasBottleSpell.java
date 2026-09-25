@@ -31,7 +31,7 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
             .setMinRarity(SpellRarity.COMMON)
             .setSchoolResource(SchoolRegistry.NATURE_RESOURCE)
             .setMaxLevel(10)
-            .setCooldownSeconds(20)
+            .setCooldownSeconds(3)
             .build();
 
     public HeadMountedGasBottleSpell() {
@@ -100,6 +100,7 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
 
     private CastSource normalizeCastSource(CastSource castSource) {
         return castSource == CastSource.NONE || castSource == CastSource.SWORD
+                || castSource == CastSource.SCROLL
                 ? CastSource.SPELLBOOK
                 : castSource;
     }
