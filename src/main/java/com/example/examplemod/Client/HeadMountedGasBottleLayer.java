@@ -30,7 +30,7 @@ public class HeadMountedGasBottleLayer<T extends LivingEntity, M extends EntityM
         extends RenderLayer<T, M> {
     private static final float MODEL_BASE_Y = 1.501f;
     private static final float HEAD_MOUNT_OFFSET = -0.75f;
-    private static final float QUADRUPED_FORWARD_OFFSET = -0.28f;
+    private static final float QUADRUPED_FORWARD_OFFSET = -0.26f;
     private final HeadMountedGasBottleEntityRenderer renderer = new HeadMountedGasBottleEntityRenderer();
     private boolean headPartResolved;
     private ModelPart headPart;

@@ -19,6 +19,7 @@ public class HeadMountedGasBottleRenderer extends GeoArmorRenderer<HeadMountedGa
     private static final float VANILLA_HUMANOID_HEAD_OFFSET = 26.5f;
     private static final float HEAD_OFFSET_DOWN = 0.25f;
     private static final float OTHER_HUMANOID_CORRECTION = 0.875f;
+    private static final float SNEAKING_HEAD_Y = 3.15f;
 
     public HeadMountedGasBottleRenderer() {
         super(new HeadMountedGasBottleModel());
@@ -45,6 +46,12 @@ public class HeadMountedGasBottleRenderer extends GeoArmorRenderer<HeadMountedGa
                     ? VANILLA_HUMANOID_HEAD_OFFSET
                     : (entity.getBbHeight() - HEAD_OFFSET_DOWN) * 16.0f;
             this.head.setPosY(this.head.getPosY() + headOffset);
+
+            if (entity instanceof Player && this.baseModel != null && this.baseModel.crouching) {
+                // GeoArmorRenderer scales the custom bone position by 4.3f. Remove
+                // vanilla's crouching head translation so it is not amplified.
+                this.head.setPosY(this.head.getPosY() + SNEAKING_HEAD_Y);
+            }
 
             if (!useVanillaHumanoidAnchor) {
                 // Apply this after GeoArmorRenderer's model scale/flip setup so the
