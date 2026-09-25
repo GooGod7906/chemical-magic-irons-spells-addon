@@ -5,11 +5,14 @@ import com.example.examplemod.Entities.ModEntities;
 import com.example.examplemod.Entities.Projectile.HeadMountedGasBottleProjectile;
 import com.example.examplemod.Items.ModItems;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
+import io.redspace.ironsspellbooks.api.config.SpellConfigManager;
+import io.redspace.ironsspellbooks.api.config.SpellConfigParameter;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.api.spells.CastType;
+import io.redspace.ironsspellbooks.api.spells.CastResult;
 import io.redspace.ironsspellbooks.api.spells.SpellRarity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -20,6 +23,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerPlayer;
 
 public class HeadMountedGasBottleSpell extends AbstractSpell {
     private int lastCastSpellLevel = 1;
@@ -31,8 +35,6 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
             .build();
 
     public HeadMountedGasBottleSpell() {
-        this.baseManaCost = 40;
-        this.manaCostPerLevel = 10;
     }
 
     @Override
@@ -51,8 +53,22 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
     }
 
     @Override
+    public int getManaCost(int spellLevel) {
+        SpellRarity rarity = getRarity(Math.max(1, spellLevel));
+        int baseCost = 20 + rarity.getValue() * 5;
+        return (int) (baseCost * SpellConfigManager.getSpellConfigValue(
+                this, SpellConfigParameter.MANA_MULTIPLIER));
+    }
+
+    @Override
     public boolean checkPreCastConditions(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData) {
         return true;
+    }
+
+    @Override
+    public CastResult canBeCastedBy(int spellLevel, CastSource castSource, MagicData playerMagicData,
+                                    net.minecraft.world.entity.player.Player player) {
+        return super.canBeCastedBy(spellLevel, normalizeCastSource(castSource), playerMagicData, player);
     }
 
     @Override
@@ -62,11 +78,30 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
             HeadMountedGasBottleProjectile projectile = new HeadMountedGasBottleProjectile(
                     ModEntities.HEAD_MOUNTED_GAS_BOTTLE_PROJECTILE.get(), entity, serverLevel);
             projectile.setSpellLevel(spellLevel);
-            projectile.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0.0f, 0.5f, 0.0f);
+            projectile.setRandomRoll(serverLevel.random.nextFloat() * 360.0f);
+            projectile.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0.0f, 0.8f, 0.0f);
+            projectile.setYRot(entity.getYRot());
+            projectile.setXRot(entity.getXRot());
+            projectile.yRotO = projectile.getYRot();
+            projectile.xRotO = projectile.getXRot();
             serverLevel.addFreshEntity(projectile);
         }
 
         super.onCast(level, spellLevel, entity, castSource, playerMagicData);
+    }
+
+    @Override
+    public void castSpell(Level world, int spellLevel, ServerPlayer serverPlayer,
+                          CastSource castSource, boolean triggerCooldown) {
+        CastSource effectiveCastSource = normalizeCastSource(castSource);
+        super.castSpell(world, spellLevel, serverPlayer, effectiveCastSource,
+                triggerCooldown || effectiveCastSource == CastSource.SPELLBOOK);
+    }
+
+    private CastSource normalizeCastSource(CastSource castSource) {
+        return castSource == CastSource.NONE || castSource == CastSource.SWORD
+                ? CastSource.SPELLBOOK
+                : castSource;
     }
 
     public int getLastCastSpellLevel() {

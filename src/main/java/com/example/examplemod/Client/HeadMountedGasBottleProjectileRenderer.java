@@ -4,6 +4,7 @@ import com.example.examplemod.Entities.Projectile.HeadMountedGasBottleProjectile
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class HeadMountedGasBottleProjectileRenderer extends GeoEntityRenderer<HeadMountedGasBottleProjectile> {
@@ -17,6 +18,8 @@ public class HeadMountedGasBottleProjectileRenderer extends GeoEntityRenderer<He
     protected void applyRotations(HeadMountedGasBottleProjectile projectile, PoseStack poseStack,
                                   float ageInTicks, float rotationYaw, float partialTick, float nativeScale) {
         super.applyRotations(projectile, poseStack, ageInTicks, rotationYaw, partialTick, nativeScale);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-projectile.getXRot()));
+        float pitch = Mth.lerp(partialTick, projectile.xRotO, projectile.getXRot());
+        poseStack.mulPose(Axis.XP.rotationDegrees(-pitch));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(projectile.getRandomRoll()));
     }
 }

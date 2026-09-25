@@ -19,7 +19,7 @@
           "name": "root",
           "pivot": [
             0,
-            -1.65,
+            -2.45,
             0
           ],
           "rotation": [
@@ -31,11 +31,11 @@
         {
           "name": "bottle_model",
           "parent": "root",
-              "pivot": [
-                0,
-                -1.65,
-                0
-              ],
+          "pivot": [
+            0,
+            -1.65,
+            0
+          ],
               "rotation": [
                 0,
                 0,
