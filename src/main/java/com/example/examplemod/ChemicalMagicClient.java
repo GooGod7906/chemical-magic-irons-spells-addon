@@ -1,5 +1,8 @@
 package com.example.examplemod;
 
+import com.example.examplemod.Client.HeadMountedGasBottleProjectileRenderer;
+import com.example.examplemod.Entities.ModEntities;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -14,6 +17,9 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 public class ChemicalMagicClient {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> EntityRenderers.register(
+                ModEntities.HEAD_MOUNTED_GAS_BOTTLE_PROJECTILE.get(),
+                HeadMountedGasBottleProjectileRenderer::new));
         ChemicalMagic.LOGGER.info("Chemical Magic client initialized for {}", Minecraft.getInstance().getUser().getName());
     }
 }

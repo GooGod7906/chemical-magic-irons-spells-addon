@@ -14,7 +14,7 @@ public class HeadMountedGasBottleRenderer extends GeoArmorRenderer<HeadMountedGa
     public HeadMountedGasBottleRenderer() {
         super(new HeadMountedGasBottleModel());
         // The geo model is authored in compact bottle units; enlarge it to head scale.
-        withScale(4.0f);
+        withScale(4.3f);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class HeadMountedGasBottleRenderer extends GeoArmorRenderer<HeadMountedGa
 
         if (!isReRender && this.head != null) {
             // Keep the offset on the head bone so entity head rotations still drive the model.
-            this.head.setPosY(this.head.getPosY() + 26f);
+            this.head.setPosY(this.head.getPosY() + 26.5f);
         }
     }
 

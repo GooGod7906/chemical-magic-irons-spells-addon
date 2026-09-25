@@ -1,6 +1,8 @@
 package com.example.examplemod.Spells;
 
 import com.example.examplemod.ChemicalMagic;
+import com.example.examplemod.Entities.ModEntities;
+import com.example.examplemod.Entities.Projectile.HeadMountedGasBottleProjectile;
 import com.example.examplemod.Items.ModItems;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
@@ -9,8 +11,6 @@ import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.api.spells.CastType;
 import io.redspace.ironsspellbooks.api.spells.SpellRarity;
-import io.redspace.ironsspellbooks.api.util.Utils;
-import io.redspace.ironsspellbooks.capabilities.magic.TargetEntityCastData;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class HeadMountedGasBottleSpell extends AbstractSpell {
+    private int lastCastSpellLevel = 1;
     private final DefaultConfig defaultConfig = new DefaultConfig()
             .setMinRarity(SpellRarity.COMMON)
             .setSchoolResource(SchoolRegistry.NATURE_RESOURCE)
@@ -51,36 +52,57 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
 
     @Override
     public boolean checkPreCastConditions(Level level, int spellLevel, LivingEntity entity, MagicData playerMagicData) {
-        return Utils.preCastTargetHelper(level, entity, playerMagicData, this, 48, 0.25f, false);
+        return true;
     }
 
     @Override
     public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return;
-        }
-
-        if (playerMagicData.getAdditionalCastData() instanceof TargetEntityCastData targetData) {
-            LivingEntity target = targetData.getTarget(serverLevel);
-            if (target != null && target.isAlive()) {
-                target.hurt(getDamageSource(entity), 2.0f + spellLevel * 0.75f);
-                target.addEffect(new MobEffectInstance(
-                        MobEffects.POISON,
-                        60 + spellLevel * 12,
-                        Math.min(1, (spellLevel - 1) / 5),
-                        false,
-                        true,
-                        true));
-
-                if (target.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-                    target.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.HEAD_MOUNTED_GAS_BOTTLE.get()));
-                }
-
-                spawnGasEffects(serverLevel, target, spellLevel);
-            }
+        lastCastSpellLevel = spellLevel;
+        if (level instanceof ServerLevel serverLevel) {
+            HeadMountedGasBottleProjectile projectile = new HeadMountedGasBottleProjectile(
+                    ModEntities.HEAD_MOUNTED_GAS_BOTTLE_PROJECTILE.get(), entity, serverLevel);
+            projectile.setSpellLevel(spellLevel);
+            projectile.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0.0f, 0.5f, 0.0f);
+            serverLevel.addFreshEntity(projectile);
         }
 
         super.onCast(level, spellLevel, entity, castSource, playerMagicData);
+    }
+
+    public int getLastCastSpellLevel() {
+        return lastCastSpellLevel;
+    }
+
+    public double getCooldownMultiplier(int spellLevel) {
+        return switch (getRarity(Math.max(1, spellLevel))) {
+            case COMMON -> 1.0;
+            case UNCOMMON -> 0.9;
+            case RARE -> 0.8;
+            case EPIC -> 0.7;
+            case LEGENDARY -> 0.6;
+        };
+    }
+
+    public void applyHitEffects(ServerLevel level, net.minecraft.world.entity.Entity projectile,
+                                LivingEntity caster, LivingEntity target, int spellLevel) {
+        if (!target.isAlive()) {
+            return;
+        }
+
+        target.hurt(getDamageSource(projectile, caster), 2.0f + spellLevel * 0.75f);
+        target.addEffect(new MobEffectInstance(
+                MobEffects.POISON,
+                60 + spellLevel * 12,
+                Math.min(1, (spellLevel - 1) / 5),
+                false,
+                true,
+                true));
+
+        if (target.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+            target.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.HEAD_MOUNTED_GAS_BOTTLE.get()));
+        }
+
+        spawnGasEffects(level, target, spellLevel);
     }
 
     private void spawnGasEffects(ServerLevel level, LivingEntity target, int spellLevel) {

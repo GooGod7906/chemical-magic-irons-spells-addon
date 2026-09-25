@@ -1,5 +1,5 @@
 {
   "spell.chemicalmagic.head_mounted_gas_bottle": "Head-Mounted Gas Bottle",
-  "spell.chemicalmagic.head_mounted_gas_bottle.guide": "Poisons a visible target and places a gas bottle on its head",
+  "spell.chemicalmagic.head_mounted_gas_bottle.guide": "Throws a gas bottle; on hit, poisons the target and places a gas bottle on its head",
   "item.chemicalmagic.head_mounted_gas_bottle": "Head-Mounted Gas Bottle"
 }
