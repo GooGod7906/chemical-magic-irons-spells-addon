@@ -1,6 +1,6 @@
-package com.example.examplemod.Client;
+package com.example.examplemod.content.headmountedgasbottle.client;
 
-import com.example.examplemod.Entities.Projectile.HeadMountedGasBottleProjectile;
+import com.example.examplemod.content.headmountedgasbottle.entity.HeadMountedGasBottleProjectile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -11,7 +11,7 @@ public class HeadMountedGasBottleProjectileRenderer extends GeoEntityRenderer<He
     public HeadMountedGasBottleProjectileRenderer(EntityRendererProvider.Context context) {
         super(context, new HeadMountedGasBottleProjectileModel());
         withScale(4.3f);
-        this.shadowRadius = 0.15f;
+        shadowRadius = 0.15f;
     }
 
     @Override

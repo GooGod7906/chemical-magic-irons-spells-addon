@@ -1,7 +1,7 @@
-package com.example.examplemod.Client;
+package com.example.examplemod.content.headmountedgasbottle.client;
 
 import com.example.examplemod.ChemicalMagic;
-import com.example.examplemod.Entities.Projectile.HeadMountedGasBottleProjectile;
+import com.example.examplemod.content.headmountedgasbottle.entity.HeadMountedGasBottleProjectile;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

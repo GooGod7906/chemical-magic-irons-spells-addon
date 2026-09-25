@@ -1,4 +1,4 @@
-package com.example.examplemod.Items;
+package com.example.examplemod.registry;
 
 import com.example.examplemod.ChemicalMagic;
 import net.minecraft.world.item.Item;
@@ -10,10 +10,10 @@ public final class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.createItems(ChemicalMagic.MOD_ID);
 
-    public static final Supplier<HeadMountedGasBottleItem> HEAD_MOUNTED_GAS_BOTTLE =
-            ITEMS.register("head_mounted_gas_bottle", () ->
-                    new HeadMountedGasBottleItem(new Item.Properties().stacksTo(1)));
-
     private ModItems() {
+    }
+
+    public static <T extends Item> Supplier<T> register(String id, Supplier<T> item) {
+        return ITEMS.register(id, item);
     }
 }

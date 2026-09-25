@@ -1,29 +1,27 @@
-package com.example.examplemod.Spells;
+package com.example.examplemod.content.headmountedgasbottle;
 
 import com.example.examplemod.ChemicalMagic;
-import com.example.examplemod.Entities.ModEntities;
-import com.example.examplemod.Entities.Projectile.HeadMountedGasBottleProjectile;
-import com.example.examplemod.Items.ModItems;
+import com.example.examplemod.content.headmountedgasbottle.entity.HeadMountedGasBottleProjectile;
 import io.redspace.ironsspellbooks.api.config.DefaultConfig;
 import io.redspace.ironsspellbooks.api.config.SpellConfigManager;
 import io.redspace.ironsspellbooks.api.config.SpellConfigParameter;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.SchoolRegistry;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
+import io.redspace.ironsspellbooks.api.spells.CastResult;
 import io.redspace.ironsspellbooks.api.spells.CastSource;
 import io.redspace.ironsspellbooks.api.spells.CastType;
-import io.redspace.ironsspellbooks.api.spells.CastResult;
 import io.redspace.ironsspellbooks.api.spells.SpellRarity;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerPlayer;
 
 public class HeadMountedGasBottleSpell extends AbstractSpell {
     private int lastCastSpellLevel = 1;
@@ -33,9 +31,6 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
             .setMaxLevel(10)
             .setCooldownSeconds(3)
             .build();
-
-    public HeadMountedGasBottleSpell() {
-    }
 
     @Override
     public ResourceLocation getSpellResource() {
@@ -72,11 +67,12 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
     }
 
     @Override
-    public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource, MagicData playerMagicData) {
+    public void onCast(Level level, int spellLevel, LivingEntity entity, CastSource castSource,
+                       MagicData playerMagicData) {
         lastCastSpellLevel = spellLevel;
         if (level instanceof ServerLevel serverLevel) {
             HeadMountedGasBottleProjectile projectile = new HeadMountedGasBottleProjectile(
-                    ModEntities.HEAD_MOUNTED_GAS_BOTTLE_PROJECTILE.get(), entity, serverLevel);
+                    HeadMountedGasBottleContent.PROJECTILE.get(), entity, serverLevel);
             projectile.setSpellLevel(spellLevel);
             projectile.setRandomRoll(serverLevel.random.nextFloat() * 360.0f);
             projectile.shootFromRotation(entity, entity.getXRot(), entity.getYRot(), 0.0f, 0.8f, 0.0f);
@@ -135,7 +131,7 @@ public class HeadMountedGasBottleSpell extends AbstractSpell {
                 true));
 
         if (target.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
-            target.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.HEAD_MOUNTED_GAS_BOTTLE.get()));
+            target.setItemSlot(EquipmentSlot.HEAD, new ItemStack(HeadMountedGasBottleContent.ITEM.get()));
         }
 
         spawnGasEffects(level, target, spellLevel);

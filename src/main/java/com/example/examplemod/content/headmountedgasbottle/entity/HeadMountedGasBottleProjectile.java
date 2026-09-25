@@ -1,8 +1,7 @@
-package com.example.examplemod.Entities.Projectile;
+package com.example.examplemod.content.headmountedgasbottle.entity;
 
-import com.example.examplemod.Items.ModItems;
-import com.example.examplemod.Spells.HeadMountedGasBottleSpell;
-import com.example.examplemod.Spells.Spells;
+import com.example.examplemod.content.headmountedgasbottle.HeadMountedGasBottleContent;
+import com.example.examplemod.content.headmountedgasbottle.HeadMountedGasBottleSpell;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -40,7 +39,7 @@ public class HeadMountedGasBottleProjectile extends ThrowableItemProjectile impl
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.HEAD_MOUNTED_GAS_BOTTLE.get();
+        return HeadMountedGasBottleContent.ITEM.get();
     }
 
     @Override
@@ -53,19 +52,19 @@ public class HeadMountedGasBottleProjectile extends ThrowableItemProjectile impl
     }
 
     public void setSpellLevel(int spellLevel) {
-        this.getEntityData().set(SPELL_LEVEL, Math.max(1, spellLevel));
+        getEntityData().set(SPELL_LEVEL, Math.max(1, spellLevel));
     }
 
     public void setRandomRoll(float randomRoll) {
-        this.getEntityData().set(RANDOM_ROLL, randomRoll);
+        getEntityData().set(RANDOM_ROLL, randomRoll);
     }
 
     public float getRandomRoll() {
-        return this.getEntityData().get(RANDOM_ROLL);
+        return getEntityData().get(RANDOM_ROLL);
     }
 
     private int getSpellLevel() {
-        return this.getEntityData().get(SPELL_LEVEL);
+        return getEntityData().get(SPELL_LEVEL);
     }
 
     @Override
@@ -107,15 +106,15 @@ public class HeadMountedGasBottleProjectile extends ThrowableItemProjectile impl
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        if (!(this.level() instanceof ServerLevel serverLevel)
+        if (!(level() instanceof ServerLevel serverLevel)
                 || !(result.getEntity() instanceof LivingEntity target)
-                || !(this.getOwner() instanceof LivingEntity caster)
+                || !(getOwner() instanceof LivingEntity caster)
                 || target == caster) {
             discard();
             return;
         }
 
-        HeadMountedGasBottleSpell spell = (HeadMountedGasBottleSpell) Spells.HEAD_MOUNTED_GAS_BOTTLE_SPELL.get();
+        HeadMountedGasBottleSpell spell = (HeadMountedGasBottleSpell) HeadMountedGasBottleContent.SPELL.get();
         spell.applyHitEffects(serverLevel, this, caster, target, getSpellLevel());
         discard();
     }

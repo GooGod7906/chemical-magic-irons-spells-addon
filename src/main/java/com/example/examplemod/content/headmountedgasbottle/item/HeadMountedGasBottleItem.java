@@ -1,12 +1,11 @@
-package com.example.examplemod.Items;
+package com.example.examplemod.content.headmountedgasbottle.item;
 
-import com.example.examplemod.Client.HeadMountedGasBottleRenderer;
+import com.example.examplemod.content.headmountedgasbottle.client.HeadMountedGasBottleRenderer;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -20,8 +19,8 @@ import java.util.function.Consumer;
 public class HeadMountedGasBottleItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public HeadMountedGasBottleItem(Item.Properties properties) {
-        super(ArmorMaterials.LEATHER, Type.HELMET, properties);
+    public HeadMountedGasBottleItem() {
+        super(ArmorMaterials.LEATHER, Type.HELMET, new Properties().stacksTo(1));
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.example.examplemod.Client;
+package com.example.examplemod.content.headmountedgasbottle.client;
 
-import com.example.examplemod.Items.HeadMountedGasBottleItem;
+import com.example.examplemod.content.headmountedgasbottle.item.HeadMountedGasBottleItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,8 +23,8 @@ public class HeadMountedGasBottleEntityRenderer extends GeoItemRenderer<HeadMoun
                           @Nullable MultiBufferSource bufferSource, @Nullable VertexConsumer buffer,
                           boolean isReRender, float partialTick, int packedLight, int packedOverlay,
                           int colour) {
-        this.itemRenderTranslations = new Matrix4f(poseStack.last().pose());
-        scaleModelForRender(this.scaleWidth, this.scaleHeight, poseStack, animatable, model,
+        itemRenderTranslations = new Matrix4f(poseStack.last().pose());
+        scaleModelForRender(scaleWidth, scaleHeight, poseStack, animatable, model,
                 isReRender, partialTick, packedLight, packedOverlay);
     }
 }

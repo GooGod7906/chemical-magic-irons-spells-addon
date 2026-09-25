@@ -1,17 +1,17 @@
-package com.example.examplemod.Client;
+package com.example.examplemod.content.headmountedgasbottle.client;
 
+import com.example.examplemod.content.headmountedgasbottle.HeadMountedGasBottleContent;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.example.examplemod.Items.ModItems;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.model.QuadrupedModel;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import com.mojang.math.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,9 +23,7 @@ import org.joml.Quaternionf;
 
 import java.lang.reflect.Field;
 
-/**
- * Renders the bottle for entities that do not have a vanilla humanoid armor layer.
- */
+/** Renders the bottle for entities without a vanilla humanoid armor layer. */
 public class HeadMountedGasBottleLayer<T extends LivingEntity, M extends EntityModel<T>>
         extends RenderLayer<T, M> {
     private static final float MODEL_BASE_Y = 1.501f;
@@ -44,17 +42,15 @@ public class HeadMountedGasBottleLayer<T extends LivingEntity, M extends EntityM
                        float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks,
                        float netHeadYaw, float headPitch) {
         ItemStack stack = entity.getItemBySlot(EquipmentSlot.HEAD);
-        if (!stack.is(ModItems.HEAD_MOUNTED_GAS_BOTTLE.get())) {
+        if (!stack.is(HeadMountedGasBottleContent.ITEM.get())) {
             return;
         }
 
         poseStack.pushPose();
         ModelPart head = getHeadPart();
         if (head != null) {
-            // Use the same live part the vanilla renderer uses, including baby/sitting/head rotations.
             head.translateAndRotate(poseStack);
         } else {
-            // Models without an exposed head part still get a stable head anchor and head rotation.
             poseStack.translate(0.0f, MODEL_BASE_Y - entity.getEyeHeight(), 0.0f);
             poseStack.mulPose(new Quaternionf().rotationZYX(
                     0.0f,
@@ -66,7 +62,6 @@ public class HeadMountedGasBottleLayer<T extends LivingEntity, M extends EntityM
             poseStack.translate(0.0f, 0.0f, QUADRUPED_FORWARD_OFFSET);
         }
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0f));
-        // The bottle model already uses armor pixel units; keep the vanilla flip without its item scale.
         poseStack.scale(1.0f, -1.0f, -1.0f);
         if (entity instanceof Villager || entity instanceof ZombieVillager) {
             poseStack.translate(0.0f, 0.1875f, 0.0f);
@@ -91,8 +86,6 @@ public class HeadMountedGasBottleLayer<T extends LivingEntity, M extends EntityM
     }
 
     private static ModelPart findHeadPart(EntityModel<?> model) {
-        // Vanilla non-humanoid models keep their head in one of these fields but do not
-        // implement HeadedModel. Walking the hierarchy also covers protected/private fields.
         String[] fieldNames = {"head", "headParts"};
         for (String fieldName : fieldNames) {
             for (Class<?> type = model.getClass(); type != null; type = type.getSuperclass()) {
