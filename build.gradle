@@ -151,7 +151,7 @@ dependencies {
     localRuntime "io.redspace:irons_lib:${irons_lib_version}"
     implementation "io.redspace:irons_spellbooks:${irons_spells_version}"
     localRuntime "com.illusivesoulworks.caelus:caelus-neoforge:${caelus_version}+1.21.1"
-    localRuntime "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
+    implementation "software.bernie.geckolib:geckolib-neoforge-1.21.1:${geckolib_version}"
     implementation "dev.kosmx.player-anim:player-animation-lib-forge:${player_anim_version}"
     // 编译时仅使用稳定的 API 包
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"

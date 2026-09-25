@@ -1,5 +1,6 @@
 package com.example.examplemod;
 
+import com.example.examplemod.Items.ModItems;
 import com.example.examplemod.Spells.Spells;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
@@ -13,7 +14,8 @@ public class ChemicalMagic {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public ChemicalMagic(IEventBus modEventBus, ModContainer modContainer) {
+        ModItems.ITEMS.register(modEventBus);
         Spells.SPELLS.register(modEventBus);
-        LOGGER.info("Chemical Magic spell registry initialized");
+        LOGGER.info("Chemical Magic registries initialized");
     }
 }
