@@ -1,0 +1,12 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://maven.aliyun.com/repository/public' } // 阿里云镜像
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' } // 阿里云Gradle插件镜像
+        maven { url = "https://neoforged.forgecdn.net/releases" }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
